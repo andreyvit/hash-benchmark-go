@@ -1,2 +1,7 @@
-# hash-benchmark-go
-Benchmark of hash and checksum functions in Go
+# Hash & Checksum Functions Benchmark (Golang)
+
+Run:
+
+```bash
+go test -bench=.
+```
