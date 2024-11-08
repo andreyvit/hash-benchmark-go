@@ -2,19 +2,34 @@ package benchmark_test
 
 import (
 	"crypto/rand"
+	"flag"
 	"hash/crc32"
 	"hash/crc64"
 	"hash/fnv"
 	"io"
 	"testing"
+	"time"
+
+	"github.com/cespare/xxhash/v2"
 )
+
+var throttle = flag.Bool("throttle", false, "sleep for 2 seconds before each test")
 
 var ( // ensure results are not optimized away
 	total32 uint32
 	total64 uint64
+	runs    int
 )
 
+func setup() {
+	runs++
+	if runs > 1 && *throttle {
+		time.Sleep(2 * time.Second)
+	}
+}
+
 func BenchmarkHash_CRC32(t *testing.B) {
+	setup()
 	buf := make([]byte, 1024*1024)
 	must(io.ReadFull(rand.Reader, buf))
 	c := crc32.NewIEEE()
@@ -30,6 +45,7 @@ func BenchmarkHash_CRC32(t *testing.B) {
 }
 
 func BenchmarkHash_CRC64(t *testing.B) {
+	setup()
 	buf := make([]byte, 1024*1024)
 	must(io.ReadFull(rand.Reader, buf))
 	c := crc64.New(crc64.MakeTable(crc64.ISO))
@@ -47,6 +63,7 @@ func BenchmarkHash_CRC64(t *testing.B) {
 }
 
 func BenchmarkHash_FNV1a32(t *testing.B) {
+	setup()
 	buf := make([]byte, 1024*1024)
 	must(io.ReadFull(rand.Reader, buf))
 	c := fnv.New32a()
@@ -62,6 +79,7 @@ func BenchmarkHash_FNV1a32(t *testing.B) {
 }
 
 func BenchmarkHash_FNV1a64_stdlib(t *testing.B) {
+	setup()
 	buf := make([]byte, 1024*1024)
 	must(io.ReadFull(rand.Reader, buf))
 	c := fnv.New64a()
@@ -77,6 +95,7 @@ func BenchmarkHash_FNV1a64_stdlib(t *testing.B) {
 }
 
 func BenchmarkHash_FNV1a64_inline(t *testing.B) {
+	setup()
 	buf := make([]byte, 1024*1024)
 	must(io.ReadFull(rand.Reader, buf))
 
@@ -91,6 +110,18 @@ func BenchmarkHash_FNV1a64_inline(t *testing.B) {
 	}
 }
 
+func BenchmarkHash_XXHash(t *testing.B) {
+	setup()
+	buf := make([]byte, 1024*1024)
+	must(io.ReadFull(rand.Reader, buf))
+
+	t.ResetTimer()
+	total64 = 0
+	for range t.N {
+		sum := xxhash.Sum64(buf)
+		total64 += sum
+	}
+}
 func must[T any](v T, err error) T {
 	if err != nil {
 		panic(err)
