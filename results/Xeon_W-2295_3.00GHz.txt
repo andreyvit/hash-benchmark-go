@@ -1,0 +1,9 @@
+goos: linux
+goarch: amd64
+pkg: github.com/andreyvit/hash-benchmark-go
+cpu: Intel(R) Xeon(R) W-2295 CPU @ 3.00GHz
+BenchmarkHash_CRC32                        24901             46307 ns/op
+BenchmarkHash_CRC64                         2284            482637 ns/op
+BenchmarkHash_FNV1a32                       1216           1023380 ns/op
+BenchmarkHash_FNV1a64_stdlib                1164           1017803 ns/op
+BenchmarkHash_FNV1a64_inline                1196           1020778 ns/op

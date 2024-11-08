@@ -3,51 +3,42 @@
 Run:
 
 ```bash
-go test -bench=.
+go test -count=10 -cpu=1 -bench=.
+```
+
+(`-cpu=1` is for undecorated test names to make running benchstat easier)
+
+For computers that tend to throttle quickly (like the MacBook Air), use the `-throttle` flag to introduce a delay between tests:
+
+```bash
+go test -throttle -count=10 -cpu=1 -bench=.
+```
+
+Then build the new results table:
+
+```bash
+go run summarize.go
 ```
 
 
-## Results (in MB/sec)
+## Results
 
-| CPU                   | CRC32  | CRC64  | FNV1a-32 | FNV1a-64 |
-| --------------------- |------: | -----: | -------: | -------: |
-| M2 (MB Air)           |  4 680 |    960 |    470   |    470   |
-| Xeon W-2295 3.00 GHz  | 21 560 |  2 070 |    980   |    980   |
-| Xeon W-2145 3.70 GHz  | 23 290 |  2 240 |  1 050   |  1 050   |
+All FNV1 results are basically the same, so collapsed into a single column.
+
+### MB/sec
+
+| CPU                              |  CRC32 |  CRC64 |   FNV1 | xxHash |
+| :------------------------------- | -----: | -----: | -----: | -----: |
+| M2 MB Air                        |  4 120 |    870 |    410 |  7 940 |
+| Xeon W-2145 3.70GHz              | 23 290 |  2 240 |  1 050 |    n/a |
+| Xeon W-2295 3.00GHz              | 21 600 |  2 070 |    980 |    n/a |
 
 (rounded to 10 MB/sec)
 
+### us/MB
 
-## Raw Results
-
-```
-goos: darwin
-goarch: arm64
-pkg: github.com/andreyvit/hash-benchmark-go
-cpu: Apple M2
-BenchmarkHash_CRC32-8            	    5619	    213694 ns/op
-BenchmarkHash_CRC64-8            	    1146	   1040201 ns/op
-BenchmarkHash_FNV1a32-8          	     560	   2142679 ns/op
-BenchmarkHash_FNV1a64_stdlib-8   	     561	   2135785 ns/op
-BenchmarkHash_FNV1a64_inline-8   	     560	   2138464 ns/op
-
-goos: linux
-goarch: amd64
-pkg: github.com/andreyvit/hash-benchmark-go
-cpu: Intel(R) Xeon(R) W-2295 CPU @ 3.00GHz
-BenchmarkHash_CRC32-36                     24901             46307 ns/op
-BenchmarkHash_CRC64-36                      2284            482637 ns/op
-BenchmarkHash_FNV1a32-36                    1216           1023380 ns/op
-BenchmarkHash_FNV1a64_stdlib-36             1164           1017803 ns/op
-BenchmarkHash_FNV1a64_inline-36             1196           1020778 ns/op
-
-goos: linux
-goarch: amd64
-pkg: github.com/andreyvit/hash-benchmark-go
-cpu: Intel(R) Xeon(R) W-2145 CPU @ 3.70GHz
-BenchmarkHash_CRC32-16                     27374             42941 ns/op
-BenchmarkHash_CRC64-16                      2720            445973 ns/op
-BenchmarkHash_FNV1a32-16                    1112            956008 ns/op
-BenchmarkHash_FNV1a64_stdlib-16             1168            956063 ns/op
-BenchmarkHash_FNV1a64_inline-16             1098            956932 ns/op
-```
+| CPU                              |  CRC32 |  CRC64 |   FNV1 | xxHash |
+| :------------------------------- | -----: | -----: | -----: | -----: |
+| M2 MB Air                        |    242 |  1 153 |  2 422 |    126 |
+| Xeon W-2145 3.70GHz              |     43 |    446 |    956 |    n/a |
+| Xeon W-2295 3.00GHz              |     46 |    483 |  1 018 |    n/a |
