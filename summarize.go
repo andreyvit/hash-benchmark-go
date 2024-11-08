@@ -91,7 +91,7 @@ func main() {
 
 	var buf strings.Builder
 
-	buf.WriteString("\n### MB/sec\n\n")
+	buf.WriteString("\n\n### MB/sec\n\n")
 
 	printTable(&buf, algs, models, func(v int64) string {
 		if v == 0 {
@@ -103,7 +103,7 @@ func main() {
 
 	buf.WriteString("\n(rounded to 10 MB/sec)\n")
 
-	buf.WriteString("\n### us/MB\n\n")
+	buf.WriteString("\n\n### us/MB\n\n")
 
 	printTable(&buf, algs, models, func(v int64) string {
 		if v == 0 {

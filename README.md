@@ -25,20 +25,22 @@ go run summarize.go
 
 All FNV1 results are basically the same, so collapsed into a single column.
 
+
 ### MB/sec
 
 | CPU                              |  CRC32 |  CRC64 |   FNV1 | xxHash |
 | :------------------------------- | -----: | -----: | -----: | -----: |
 | M2 MB Air                        |  4 120 |    870 |    410 |  7 940 |
-| Xeon W-2145 3.70GHz              | 23 290 |  2 240 |  1 050 |    n/a |
-| Xeon W-2295 3.00GHz              | 21 600 |  2 070 |    980 |    n/a |
+| Xeon W-2145 3.70GHz              | 23 390 |  2 280 |  1 070 | 16 810 |
+| Xeon W-2295 3.00GHz              | 22 630 |  2 190 |  1 030 | 16 280 |
 
 (rounded to 10 MB/sec)
+
 
 ### us/MB
 
 | CPU                              |  CRC32 |  CRC64 |   FNV1 | xxHash |
 | :------------------------------- | -----: | -----: | -----: | -----: |
 | M2 MB Air                        |    242 |  1 153 |  2 422 |    126 |
-| Xeon W-2145 3.70GHz              |     43 |    446 |    956 |    n/a |
-| Xeon W-2295 3.00GHz              |     46 |    483 |  1 018 |    n/a |
+| Xeon W-2145 3.70GHz              |     43 |    439 |    938 |     60 |
+| Xeon W-2295 3.00GHz              |     44 |    458 |    974 |     61 |
